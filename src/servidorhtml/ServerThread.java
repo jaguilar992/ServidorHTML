@@ -101,7 +101,7 @@ public class ServerThread extends Thread{
 		    }
 		    
 		}else{
-		    System.out.println("Error 500: indce por defecto");
+		    System.out.println("Error 500: indice por defecto");
 			Path p2 = Paths.get(DIR+"/500.html");
                         BufferedReader reader2 = Files.newBufferedReader(p2);
                         String linea;
