@@ -13,6 +13,7 @@ public class Regexp {
     private static final String REGEXP2 = "(^[A-Z]*)";
     public static String get_filename(String line){
 	Pattern p = Pattern.compile(Regexp.REGEXP);
+        if(line!=null){
 	Matcher m = p.matcher(line);
 	
 	if (m.find()) {
@@ -20,17 +21,25 @@ public class Regexp {
 	}else{
 	    return null;
 	}
+      }else{
+        return null;
+        }
     }
     
     public static String get_method(String line){
 	Pattern p = Pattern.compile(Regexp.REGEXP2);
-	Matcher m = p.matcher(line);
+	if(line!=null){
+        
+        Matcher m = p.matcher(line);
 	
 	if (m.find()) {
 	    return m.group().replace(" ", "");
 	}else{
 	    return null;
 	}
+      }else{
+        return null;
+        }
     }
 }
 

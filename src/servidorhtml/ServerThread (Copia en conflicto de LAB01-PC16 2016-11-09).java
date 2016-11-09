@@ -11,12 +11,9 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -33,7 +30,6 @@ public class ServerThread extends Thread{
     
     @Override
     public void run(){
-        
         try {
             System.out.println("Cliente Conectado");
             //Para leer lo que envie el cliente
@@ -41,9 +37,7 @@ public class ServerThread extends Thread{
             //para imprimir datos de salida                
             PrintStream output = new PrintStream(this.client.getOutputStream());
             //se lee peticion del cliente
-            //
             String request = input.readLine();
-            if(request!=null){
             System.out.println("Cliente> " + request );
             //se procesa la peticion y se espera resultado
             String strOutput = process(request);
@@ -54,16 +48,13 @@ public class ServerThread extends Thread{
             output.flush();//vacia contenido
             output.println(strOutput);
             //cierra conexion
-            }
             this.client.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-      
-        
     }
     
-     public static String process(String request) throws IOException, FileNotFoundException, NoSuchFileException{
+     public static String process(String request) throws IOException, FileNotFoundException{
         String result="";        
         String method = Regexp.get_method(request);
         
@@ -71,43 +62,20 @@ public class ServerThread extends Thread{
 	    case "GET":
 		String DIR="html";
 		String FILE = Regexp.get_filename(request);
-		if(!FILE.equals("/") && !FILE.equals(null)){
+		if(!FILE.equals("/")){
 		    
                     Path p = Paths.get(DIR+FILE);
 		    try{
 			BufferedReader reader = Files.newBufferedReader(p);
-                        String linea;
-                        while ((linea = reader.readLine()) != null) {
-                        result=result+linea+"\n";
-                        }
-		    }catch(NoSuchFileException e){
-                        System.out.println("Error 404");
-                        Path p1 = Paths.get(DIR+"/404.html");
-                        BufferedReader reader1 = Files.newBufferedReader(p1);
-                        String linea;
-                        while ((linea = reader1.readLine()) != null) {
-                        result=result+linea+"\n";
-                        }
+		    }catch(FileNotFoundException e){
+                        System.out.println("No se encontro el archivo");
                     }
                     catch(IOException e){
-                        System.out.println("Error 500");
-			Path p2 = Paths.get(DIR+"/500.html");
-                        BufferedReader reader2 = Files.newBufferedReader(p2);
-                        String linea;
-                        while ((linea = reader2.readLine()) != null) {
-                        result=result+linea+"\n";
-                        }
-                        
+			System.out.println("No se pudo abrir el archivo ");
 		    }
-		    
+		    result="Hola";
 		}else{
-		    System.out.println("Error 500: indce por defecto");
-			Path p2 = Paths.get(DIR+"/500.html");
-                        BufferedReader reader2 = Files.newBufferedReader(p2);
-                        String linea;
-                        while ((linea = reader2.readLine()) != null) {
-                        result=result+linea+"\n";
-                        }
+		    result="500";
 		}
 		
 		
